@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <head>
+    <title>签到状态</title></head>
+
+  <body>
+    <script language="javascript">
+      var mymessage=confirm("{{name}}");
+      // 判断签到结果，点击确定则录入，点击取消则不录入（待完成）
+      if(mymessage==true)
+      {
+          $.ajax({
+            url: "/jilu",
+            type: "POST",
+            data: mymessage
+          });
+      }
+      else if(mymessage==false)
+      {-
+          document.write("要学javascript，而且必须学");
+      }
+    </script>
+  </body>
+
+</html>

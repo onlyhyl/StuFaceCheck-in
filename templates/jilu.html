@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+  <head>
+    <title>签到记录</title></head>
+
+  <body>选择查询时间：
+    <form method="post" onsubmit="return false">
+      <input type="date" id="getDate" name="date" value="2019-11-11" onchange="getDate()">
+      <input type="button" value="查询" onclick="DayJilu();" /></form>
+      <input type="button" value="查看所有记录" onclick="AllJilu();" /></form>
+    <table border="1"  id="table">
+      <thead>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>签到时间</th></thead>
+
+      <tbody id="tbody"></tbody>
+    </table>
+    <script type="text/javascript">
+      // 查询某一天记录
+      function DayJilu() {
+        $("#tbody").empty("");
+        var x = $('#getDate').val();
+        $.ajax({
+          url: "/jilu",
+          //调用的是这个url对应的那个Handler
+          type: "POST",
+          //Post方法
+          data: {
+            date: x
+          },
+          //要往服务器传递的数据
+          success: function(arg) { //成功从服务端获取到值，参数arg表示从服务端的Handler获取的数据
+            var obj = jQuery.parseJSON(arg); //获取的数据一般为json格式，用这个方法来解析数据
+            var str = "";
+            for (var i = 0; i < obj.length; i++) {
+              str = "<tr>" + "<td>" + obj[i].stuid + "</td>" + "<td>" + obj[i].stuname + "</td>" + "<td>" + obj[i].time + "</td>" + "</tr>";
+              $("#tbody").append(str);
+            }
+          },
+          error: function() { //获取失败
+            console.log("failed");
+          }
+        });
+      }
+
+      // 查询所有记录
+      function AllJilu() {
+        $("#tbody").empty("");
+        $.ajax({
+          url: "/jilu",
+          //调用的是这个url对应的那个Handler
+          type: "POST",
+          //Post方法
+          data: {
+            date: 0
+          },
+          //要往服务器传递的数据
+          success: function(arg) { //成功从服务端获取到值，参数arg表示从服务端的Handler获取的数据
+            var obj = jQuery.parseJSON(arg); //获取的数据一般为json格式，用这个方法来解析数据
+            var str = "";
+            $th = $("<th>签到总次数</th>");
+            $("#table>thead>tr").append($th);
+            for (var i = 0; i < obj.length; i++) {
+              str = "<tr>" + "<td>" + obj[i].stuid + "</td>" + "<td>" + obj[i].stuname + "</td>" + "<td>" + obj[i].time + "</td>" + "<td>" + obj[i].number + "</td>" + "</tr>";
+              $("#tbody").append(str);
+            }
+          },
+          error: function() { //获取失败
+            console.log("failed");
+          }
+        });
+      }
+    </script>
+  </body>
+
+</html>
